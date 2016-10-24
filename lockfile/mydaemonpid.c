@@ -13,10 +13,10 @@ int lockfile(int fd)
 {
     struct flock fl;
 
-    fl.l_type = F_WRLCK;  /*write lock*/
-    fl.l_start = 0;
-    fl.l_whence = SEEK_SET;
-    fl.l_len = 0;  // lock the whole file
+    fl.l_type = F_WRLCK;    /*write lock. type of lock: F_RDLCK, F_WRLCK, F_UNLCK*/
+    fl.l_whence = SEEK_SET; /* how to interpret l_start:SEEK_SET, SEEK_CUR, SEEK_END*/
+    fl.l_start = 0;         /* starting offset for lock*/
+    fl.l_len = 0;           /* lock the whole file. number of bytes to lock */
 
     return (fcntl(fd, F_SETLK, &fl));
 }
