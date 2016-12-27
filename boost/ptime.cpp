@@ -6,12 +6,28 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
+#include <boost/date_time/local_time_adjustor.hpp>
+#include <boost/date_time/c_local_time_adjustor.hpp>
 
 
 using namespace std;
 using namespace boost::posix_time;
 using namespace boost::gregorian;
 using namespace boost;
+
+// here use c_local_adjustor for across the day
+long get_past_days(time_t balance_date)
+{
+    using namespace boost::posix_time;
+    using namespace boost::gregorian;
+    using boost::date_time::c_local_adjustor;
+    using boost::posix_time::from_time_t;
+
+    ptime pt_now( second_clock::local_time() );
+    ptime pt_post = c_local_adjustor<ptime>::utc_to_local(from_time_t(balance_date));
+
+    return boost::lexical_cast<long>(pt_now.date() - pt_post.date());
+}
 
 int main()
 {
