@@ -1,4 +1,4 @@
-all: async_timer sync_timer async_timer_argu async_timer_memfunc
+all: async_timer sync_timer async_timer_argu async_timer_memfunc async_timer_strand
 
 
 async_timer:using_a_timer_asynchronously.cpp
@@ -13,5 +13,8 @@ async_timer_argu:using_a_timer_asynchronously_with_arguments.cpp
 async_timer_memfunc:using_a_timer_asynchronously_with_memfunction.cpp
 	g++ -g -Wall -o async_timer_memfunc using_a_timer_asynchronously_with_memfunction.cpp -lboost_date_time -lboost_system
 
+async_timer_strand:using_a_timer_asynchronously_with_strand.cpp
+	g++ -g -Wall -o async_timer_strand using_a_timer_asynchronously_with_strand.cpp -lboost_date_time -lboost_system -lboost_thread
+
 clean:
-	rm -f *.o async_timer sync_timer async_timer_argu async_timer_memfunc
+	rm -f *.o async_timer sync_timer async_timer_argu async_timer_memfunc async_timer_strand
