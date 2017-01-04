@@ -1,0 +1,40 @@
+package hy_dynamic_dmp;
+
+message User
+{
+    optional string id = 1; // 用户id
+}
+
+message Mat
+{
+    optional string id = 1; // 素材id
+}
+
+message Ad
+{
+    optional string id = 1; // 广告id
+    optional string adspaceid = 2; //广告位id
+    repeated Mat    mat = 3;
+    optional string keys = 4;
+}
+
+message hyDMPRequest
+{
+    optional string id = 1;  //请求id，要求response中返回的和请求id保持一致
+    optional string media = 2; // 媒体名称
+    optional User user = 3; // 用户信息
+    repeated Ad   ad = 4;  // 广告
+}
+
+message MatAd
+{
+    optional string matid = 1;
+    optional string adid = 2;
+    optional string adspaceid = 3;
+}
+
+message hyDMPResponse
+{
+    optional string id = 1; //响应id，和请求id保持一致
+    repeated MatAd mtad = 2; // 返回的素材列表
+}
