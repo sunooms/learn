@@ -4,7 +4,7 @@ all: target boost_random
 target:
 	g++ -o ptime ptime.cpp -lboost_date_time
 
-boost_random:
+boost_random: boost_random.cpp
 	g++ -o boost_random boost_random.cpp
 
 clean:
