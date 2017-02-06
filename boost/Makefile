@@ -1,8 +1,11 @@
 
-all: target
+all: target boost_random
 
 target:
-	g++ *.cpp -lboost_date_time
+	g++ -o ptime ptime.cpp -lboost_date_time
+
+boost_random:
+	g++ -o boost_random boost_random.cpp
 
 clean:
-	rm -rf *.o a.out
+	rm -rf *.o ptime boost_random
