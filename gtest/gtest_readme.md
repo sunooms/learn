@@ -16,4 +16,4 @@
    see the gtest demo
 
 #generate xml report
-    ./gtest_demo --gtest_output=xml
+    ./gtest_demo --gtest_output=xml:/tmp/detail_gtest.xml
