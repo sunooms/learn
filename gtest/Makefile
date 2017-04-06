@@ -28,4 +28,4 @@ gtest_demo:
 	g++ -o gtest_demo $(SRC_FILES) -lgtest -lpthread
 
 clean:
-	rm gtest_demo
+	rm gtest_demo *.xml

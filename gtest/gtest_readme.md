@@ -14,3 +14,6 @@
 
 #write test code
    see the gtest demo
+
+#generate xml report
+    ./gtest_demo --gtest_output=xml
