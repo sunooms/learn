@@ -7,7 +7,7 @@
 //  2017/04/25  init version
 //
 //
-#ifndef   INTERFACE_MODULE_H_ 
+#ifndef   INTERFACE_MODULE_H_
 #define   INTERFACE_MODULE_H_
 
 #include <stdio.h>
@@ -100,6 +100,38 @@ public:
 private:
     std::list<M*> modules_;
     std::string   mod_name_;
+};
+
+
+class FlowBase;
+
+class FlowComponent : public Module
+{
+public:
+    FlowComponent(const char* module_name):Module(module_name){};
+    virtual ~FlowComponent(){};
+
+    virtual RESULT Attach(FlowBase*) = 0;
+    virtual RESULT Detach(FlowBase*) = 0;
+
+    virtual RESULT InitModule(const ComponentConfig& cfg) = 0;
+};
+
+
+class Flow : public Module
+{
+public:
+    Flow(const char* module_name):Module(module_name);
+    virtual ~Flow(){};
+
+    virtual RESULT InitModule(const FlowConfig& cfg)=0;
+    virtual RESULT GlobalInit(Session* session)=0;
+    virtual RESULT GlobalExit(Session* session)=0;
+
+    virtual RESULT ProcessRequest(Session* session)=0;
+    virtual RESULT ProcessEndRequest(Session* session)=0;
+
+    virtual Session* CreateSession(const IRequest* req, IResponse* resp)=0;
 };
 
 
