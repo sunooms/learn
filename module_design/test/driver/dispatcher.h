@@ -66,8 +66,11 @@ public:
 
     inline Dispatcher* GetDispatcher() const {return dispatcher_;};
 
+    virtual int InitInstance();
+    virtual int ExitInstance();
+
 protected:
-    time_t GetConfigFileTimestamp();
+    time_t      GetConfigFileTimestamp();
     Dispatcher* CheckAndLoadNewDispatcher();
 
 public:
