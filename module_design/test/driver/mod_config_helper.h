@@ -11,6 +11,7 @@
 
 #include <string>
 #include "core/mod_config.h"
+#include "third/rapidxml/rapidxml_utils.hpp"
 
 class ModuleConfigHelper
 {

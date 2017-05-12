@@ -137,7 +137,7 @@ bool Dispatcher::InitModule(const FlowConfig& flow_config)
     return true;
 }
 
-RESULT Dispatcher::HandleRequest(const IRequest* req, IResponse* resp)
+RESULT Dispatcher::HandleRequest(const Request* req, Response* resp)
 {
     RESULT rel = RESULT_ERROR;
 

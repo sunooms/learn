@@ -1,27 +1,30 @@
 #ifndef DRIVE_DISPATCHER_H_
 #define DRIVE_DISPATCHER_H_
 
-#include "common/global_consts.h"
 #include <string>
 #include <list>
 #include <map>
+#include "common/global_define.h"
+#include "core/mod_config.h"
 
 
 class FlowConfig;
 class Flow;
 class Session;
 class DispatcherMgr;
+class Request;
+class Response;
 
 class Dispatcher
 {
 public:
     Dispatcher();
-    virtural ~Dispatcher();
+    virtual ~Dispatcher();
 
     // call during both initial and update
     // return modules count, >0 success; <=0 load failure
     virtual int    LoadAllModule();
-    virtual RESULT HandleRequest(const IRequest* req, IResponse* resp);
+    virtual RESULT HandleRequest(const Request* req, Response* resp);
 
 protected:
     struct ModuleInfo

@@ -15,6 +15,7 @@
 #include <list>
 #include <string>
 #include "common/global_define.h"
+#include "core/mod_config.h"
 
 
 class Module
@@ -23,10 +24,10 @@ public:
     enum RETURN_TYPE
     {
         // must break
-        RET_TYPE_ERROR       = -1;  // must break;
-        RET_TYPE_CONTINUE    = 0;
-        RET_TYPE_NEXT_STEP   = 1;   // skip other hook of this step
-        RET_TYPE_FINAL_STEP  = 50;  // goto final step, skip other steps
+        RET_TYPE_ERROR       = -1,  // must break;
+        RET_TYPE_CONTINUE    = 0,
+        RET_TYPE_NEXT_STEP   = 1,   // skip other hook of this step
+        RET_TYPE_FINAL_STEP  = 50   // goto final step, skip other steps
     };
 #define RET_ISFAILED(rel) (rel <= RET_TYPE_ERROR)
 #define RET_ISSUCCESSED(rel) (rel >= RET_TYPE_CONTINUE)
@@ -73,9 +74,9 @@ public:
     };
     virtual ~SimpleModuleFactory()
     {
-        ModuleRegistry::Remove(this, mod_name.c_str());
+        ModuleRegistry::Remove(this, mod_name_.c_str());
 
-        DebugLog("[%s] ~SimpleModuleFacotry mod_size=%zd\n", mod_name.c_str(), modules_.size());
+        DebugLog("[%s] ~SimpleModuleFacotry mod_size=%zd\n", mod_name_.c_str(), modules_.size());
 
         M* mod = NULL;
         typename std::list<M*>::iterator it = modules_.begin();
@@ -91,7 +92,7 @@ public:
 
     virtual Module* Build()
     {
-        /*typename*/ M* mod = new M(mod_name.c_str());
+        /*typename*/ M* mod = new M(mod_name_.c_str());
         modules_.push_back(mod);
 
         return dynamic_cast<Module*>(mod);

@@ -42,10 +42,10 @@ public:
         components_map_.clear();
         for(size_t i=0; i<components_.size(); i++)
         {
-            comp = components[i];
-            components[i] = NULL;
+            comp = components_[i];
+            components_[i] = NULL;
             if(comp){
-                delete comp
+                delete comp;
             }
         }
         components_.clear();
@@ -106,14 +106,14 @@ inline const std::vector<ComponentConfig*>& FlowConfig::components() const{
     return components_;
 }
 
-inlineconst std::map<std::string, ComponentConfig*>& FlowConfig::components_map() const{
+inline const std::map<std::string, ComponentConfig*>& FlowConfig::components_map() const{
     return components_map_;
 }
 
 inline const std::string& ComponentConfig::ConfigData(std::string param_name) const{
     static const std::string null_string("");
     std::map<std::string, std::string>::const_iterator it=conf_data_.find(param_name);
-    return (it!=conf_data.end())?it->second:null_string;
+    return (it!=conf_data_.end())?it->second:null_string;
 }
 
 inline int ComponentConfig::GetHookOrder(std::string hook_name) const{
