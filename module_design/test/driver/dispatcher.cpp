@@ -169,3 +169,100 @@ RESULT Dispatcher::HandleRequest(const IRequest* req, IResponse* resp)
     }
 }
 
+
+DispatcherMgr::DispatcherMgr():dipatcher_(NULL),config_version_("0"),last_timestamp_(0)
+{
+    exit_thread_ = false;
+}
+
+DispatcherMgr::~DispatcherMgr()
+{
+    ExitInstance();
+}
+
+// thread initialization
+int DispatcherMgr::InitInstance()
+{
+    int rel = 0;
+
+    dispatcher_ = CheckAndLoadNewDispatcher();
+    if(NULL == dispatcher_){
+        return RESULT_ERROR;
+    }
+
+    return rel;
+}
+
+int DispatcherMgr::ExitInstance()
+{
+    Dispatcher *tmp_disp = dispatcher_;
+    dispatcher_ = NULL;
+
+    if(tmp_disp){
+        tmp_disp->ReleaseAllModule();
+        delete tmp_disp;
+        tmp_disp = NULL;
+    }
+
+    return 0;
+}
+
+time_t DispatcherMgr::GetConfigFileTimestamp()
+{
+    //conf/modules.xml
+    std::string module_conf_file(ModuleConfigHelper::GetConfFilePath());
+    struct stat stat_info;
+
+    if(stat(module_conf_file.c_str(), &stat_info) != -1){
+        return stat_info.st_mtime;
+    }
+
+    return 0;
+}
+
+Dispatcher* DispatcherMgr::CheckAndLoadNewDispatcher()
+{
+    time_t timestamp = GetConfigFileTimestamp();
+
+    Dispatcher* disp = NULL;
+
+    if(timstamp > last_timestamp_ || last_timestamp_ == 0){
+        last_timestamp_ = timestamp;
+        disp = new Dispatcher();
+        disp->LoadAllModule();
+    }
+
+    return disp;
+}
+
+// running and idle processing
+// here use thread to update dispatcher
+int DispatcherMgr::Run()
+{
+    Dispatcher* new_disp = NULL;
+    Dispatcher* old_disp = dispatcher_;
+
+    while (!exit_thread_)
+    {
+        // check modules.xml and load new version
+        new_disp = CheckAndLoadNewDispatcher();
+        if(new_disp && new_disp != dispatcher_)
+        {
+            // todo something
+        }
+
+        usleep(100 * 1000);
+    }
+
+    Dispatcher* tmp_disp = dispatcher_ ;
+    dispatcher_ = NULL;
+
+    usleep(100 * 1000);
+    if(tmp_disp){
+        delete tmp_disp;
+        tmp_disp = NULL;
+    }
+
+    return 0;
+}
+

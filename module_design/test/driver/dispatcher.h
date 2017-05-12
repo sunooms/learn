@@ -69,6 +69,9 @@ public:
     virtual int InitInstance();
     virtual int ExitInstance();
 
+    // runing
+    virtual int Run();
+
 protected:
     time_t      GetConfigFileTimestamp();
     Dispatcher* CheckAndLoadNewDispatcher();
@@ -81,7 +84,7 @@ protected:
     std::string config_version_;
 
     time_t      last_timestamp_;
-
+    bool        exit_thread_;
 };
 
 #endif // DRIVE_DISPATCHER_H_
