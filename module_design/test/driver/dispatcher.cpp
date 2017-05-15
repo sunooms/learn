@@ -1,12 +1,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "driver/dispatcher.h"
 #include "interface/module.h"
 #include "interface/flow.h"
+#include "driver/dispatcher.h"
+#include "driver/mod_config_helper.h"
 
 Dispatcher::FlowInfo::FlowInfo(std::string name, const FlowConfig& conf, Flow* f, Session* s)
-    :Flow_class_(name), flow_conf_(conf), instance_(f), globale_session_(s)
+    :flow_class_(name), flow_conf_(conf), instance_(f), global_session_(s)
 {
 }
 
@@ -42,11 +43,31 @@ Dispatcher::~Dispatcher()
     ReleaseAllModule();
 }
 
+
+// here NOT use dynamic lib, just set it for later
+bool Dispatcher::ReleaseModule(ModuleInfo& mod_info)
+{
+    return true;
+}
+
+// here NOT use dynamic lib, just set it for later
+bool Dispatcher::LoadModule(std::string mod_path)
+{
+    ModuleInfo mod_info;
+
+    mod_info.mod_path   = mod_path;
+    mod_info.mod_handle = NULL;
+
+    modules_list_.push_back(mod_info);
+
+    return true;
+}
+
 bool Dispatcher::ReleaseAllModule()
 {
     // 1 release flows resource and global_exit etc.
     FlowInfo* flow_info=NULL;
-    std::map<std::string, FlowInfo*>::iterator it_flow = flows_begin();
+    std::map<std::string, FlowInfo*>::iterator it_flow = flows_.begin();
     for(; it_flow!=flows_.end(); it_flow++)
     {
         if(NULL != (flow_info=it_flow->second))
@@ -63,17 +84,12 @@ bool Dispatcher::ReleaseAllModule()
     {
         ReleaseModule(*it);
     }
-    module_list_.clear();
+    modules_list_.clear();
 
     return true;
 }
 
-bool Dispatcher::ReleaseModule(ModuleInfo& mod_info)
-{
-    return true;
-}
-
-int Dispatvher::LoadAllModule()
+int Dispatcher::LoadAllModule()
 {
     ModuleConfigHelper conf_helper;
     if(!conf_helper.LoadModuleConfig(module_config_))
@@ -91,7 +107,7 @@ int Dispatvher::LoadAllModule()
     }
 
     std::map<std::string, FlowConfig>::const_iterator it_flow = module_config_.flows().begin();
-    for(; it_flow!=module_config_.flow().end(); ++it_flow)
+    for(; it_flow!=module_config_.flows().end(); ++it_flow)
     {
         InitModule(it_flow->second);
     }
@@ -99,9 +115,9 @@ int Dispatvher::LoadAllModule()
     return modules_list_.size();
 }
 
-bool Dispatcher::InitModule(const FlowConfig& flow_config)
+bool Dispatcher::InitModule(const FlowConfig& flow_conf)
 {
-    Module* module = ModuleRegistry::CreateModule(flow_config.class_name().c_str());
+    Module* module = ModuleRegistry::CreateModule(flow_conf.class_name().c_str());
     Flow*   flow   = dynamic_cast<Flow *>(module);
 
     if(NULL == flow){
@@ -109,7 +125,7 @@ bool Dispatcher::InitModule(const FlowConfig& flow_config)
         return false;
     }
 
-    if(flow->InitModule(flow_config) != 0)
+    if(flow->InitModule(flow_conf) != 0)
     {
         DebugLog("%s flow init failure, skip this flow.\n", flow_conf.class_name().c_str());
         return false;
@@ -167,10 +183,12 @@ RESULT Dispatcher::HandleRequest(const Request* req, Response* resp)
     else{
         DebugLog("error: not found flow for action(%s)\n", req->action().c_str());
     }
+
+    return rel;
 }
 
 
-DispatcherMgr::DispatcherMgr():dipatcher_(NULL),config_version_("0"),last_timestamp_(0)
+DispatcherMgr::DispatcherMgr():dispatcher_(NULL),config_version_("0"),last_timestamp_(0)
 {
     exit_thread_ = false;
 }
@@ -226,7 +244,7 @@ Dispatcher* DispatcherMgr::CheckAndLoadNewDispatcher()
 
     Dispatcher* disp = NULL;
 
-    if(timstamp > last_timestamp_ || last_timestamp_ == 0){
+    if(timestamp > last_timestamp_ || last_timestamp_ == 0){
         last_timestamp_ = timestamp;
         disp = new Dispatcher();
         disp->LoadAllModule();
@@ -261,6 +279,11 @@ int DispatcherMgr::Run()
     if(tmp_disp){
         delete tmp_disp;
         tmp_disp = NULL;
+    }
+
+    if(old_disp){
+        delete old_disp;
+        old_disp = NULL;
     }
 
     return 0;

@@ -56,20 +56,20 @@ bool ModuleConfigHelper::LoadModuleConfig(ModuleConfig& mod_cfg)
         FlowConfig  flow_conf;
 
         // flow name
-        attr_node = flow_conf->first_attribute("name");
+        attr_node = flow_node->first_attribute("name");
         flow_conf.mod_name_ = (attr_node!=NULL)?attr_node->value():"";
 
         DebugLog(" %s %s\n", flow_conf.mod_name_.c_str(), flow_confg.class_name.c_str());
 
         std::pair<FlowConfigMap::iterator, bool> rel
-            = mod_cfg.flows_insert(FlowConfigMap::value_type(flow_conf.mod_name_, flow_conf));
+            = mod_cfg.flows_.insert(FlowConfigMap::value_type(flow_conf.mod_name_, flow_conf));
         if(!rel.second)
         {
             DebugLog("  [%s] insert to map failure\n", flow_conf.mod_name_.c_str());
             return false;
         }
 
-        flowConfig& tmp_flow = rel.first->second;
+        FlowConfig& tmp_flow = rel.first->second;
         if(!_LoadFlowConfig(flow_node, tmp_flow))
         {
             mod_cfg.flows_.erase(rel.first);
@@ -88,7 +88,7 @@ bool ModuleConfigHelper::_LoadFlowConfig(rapidxml::xml_node<>* flow_node, FlowCo
     flow_cfg.mod_name_ = (attr_node!=NULL)?attr_node->value():"";
 
     // load component info
-    tmp_node = flow_node->first_node("components");
+    rapidxml::xml_node<>* tmp_node = flow_node->first_node("components");
     if(NULL == tmp_node)
     {
         DebugLog(" load flow:%s components root node failure\n", flow_cfg.mod_name_.c_str());
@@ -148,7 +148,7 @@ bool ModuleConfigHelper::_LoadFlowConfig(rapidxml::xml_node<>* flow_node, FlowCo
                 DebugLog("  load param(%s)=%s\n", param_name.c_str(), param_value.c_str());
             }
         }
-        flow_cfg.compents_map_.insert(std::map<std::string, ComponentConfig*>::value_type(comp->class_name_, comp));
+        flow_cfg.components_map_.insert(std::map<std::string, ComponentConfig*>::value_type(comp->class_name_, comp));
     }
 
     DebugLog(" load flow(%s) components info %s: comp count=%zd(%zd)\n------\n\n",

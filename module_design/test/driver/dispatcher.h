@@ -34,8 +34,9 @@ protected:
     };
 
     bool LoadModule(std::string mod_filepath);
-    bool ReleaseModule();
-    bool InitModule();
+    bool ReleaseModule(ModuleInfo& mod);
+    bool ReleaseAllModule();
+    bool InitModule(const FlowConfig& cfg);
 
     ModuleConfig module_config_;
     std::list<ModuleInfo> modules_list_;

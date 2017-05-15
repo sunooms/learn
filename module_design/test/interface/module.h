@@ -62,6 +62,7 @@ public:
 
     static bool Add(ModuleFactory* mod_factory, const char* mod_name);
     static bool Remove(ModuleFactory* mod_factory, const char* mod_name);
+    static ModuleFactory* Lookup(const char* mod_name);
     static Module* CreateModule(const char* mod_name);
 };
 

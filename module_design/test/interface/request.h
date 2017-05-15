@@ -18,6 +18,7 @@ public:
 
     const struct timeval& request_time() const;
     const RequestType     request_type() const;
+    const std::string&    action() const;
 
 protected:
     std::string    action_;
@@ -42,6 +43,11 @@ inline const std::string& Request::GetAttribute(const std::string& attr_name, co
 inline const RequestType Request::request_type() const
 {
     return request_type_;
+}
+
+inline const std::string& Request::action() const
+{
+    return action_;
 }
 
 #endif // INTERFACE_REQUEST_H_
