@@ -16,6 +16,7 @@
 #include <string>
 #include "common/global_define.h"
 #include "core/mod_config.h"
+#include "core/session.h"
 #include "interface/request.h"
 #include "interface/response.h"
 

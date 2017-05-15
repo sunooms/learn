@@ -1,13 +1,13 @@
 #ifndef INTERFACE_FLOW_BASE_H_
 #define INTERFACE_FLOW_BASE_H_
 
-#include "interface/module.h"
 #include <stdio.h>
 #include <map>
 #include <list>
 #include <string>
 #include <memory>
 
+#include "interface/module.h"
 
 
 class FlowBase : public Flow
@@ -24,7 +24,7 @@ public:
     virtual RESULT ProcessEndRequest(Session*) const = 0;
 
 public:
-    template<class c>
+    template<class C>
     RESULT Attach(const char* hook_name, C* comp, RETURN_TYPE (C::*hook_func)(Session*) const, int o)
     {
         //soft copy ,need release the SimpleHookFunc pointer resource
@@ -76,7 +76,7 @@ public:
         return rel;
     };
 
-    template<class c>
+    template<class C>
     RESULT GlobalAttach(const char* hook_name, C* comp, RETURN_TYPE (C::*hook_func)(Session*) const, int o)
     {
         //soft copy ,need release the SimpleHookFunc pointer resource
@@ -137,7 +137,7 @@ protected:
         virtual ~Hook(){};
 
         virtual Module::RETURN_TYPE Process(Session*) const = 0;
-        inline int order(){return order_};
+        inline int order(){return order_;};
 
         const int order_;
     };
@@ -149,7 +149,7 @@ protected:
         SimpleHook(const C* comp, Module::RETURN_TYPE (C::*hook_func)(Session*) const, int order)
             : Hook(order), comp_(comp), hook_func_(hook_func){};
 
-        virtual Module::RETURN Process(Session* s) const
+        virtual Module::RETURN_TYPE Process(Session* s) const
         {
             DebugLog("[%s]SimpleHook::Process()\n",((Module*)comp_)->module_name().c_str()) ;
             return (comp_->*hook_func_)(s);
@@ -164,10 +164,10 @@ protected:
     class GSimpleHook : public Hook
     {
     public:
-        SimpleHook(const C* comp, Module::RETURN_TYPE (C::*hook_func)(Session*) const, int order)
+        GSimpleHook(const C* comp, Module::RETURN_TYPE (C::*hook_func)(Session*) const, int order)
             : Hook(order), comp_(comp), hook_func_(hook_func){};
 
-        virtual Module::RETURN Process(Session* s) const
+        virtual Module::RETURN_TYPE Process(Session* s) const
         {
             DebugLog("[%s]SimpleHook::Process()\n",((Module*)comp_)->module_name().c_str()) ;
             return (comp_->*hook_func_)(s);
@@ -182,7 +182,7 @@ protected:
 
 
 protected:
-    virtual RETURN_TYPE ProcessHook(const std::string hook_name,Session* session);
+    virtual RETURN_TYPE ProcessHook(const std::string hook_name,Session* session) const;
     virtual RESULT InitComponents(const FlowConfig& cfg) ;//notify attach to hook to components
     virtual RESULT InitHooks(const FlowConfig& cfg)=0 ;//create all hooks that can be attached by components .
 
@@ -195,7 +195,7 @@ protected:
     std::list<const FlowComponent*> components_;
 
 private:
-    class Hookfunc
+    class HookFunc
     {
     public:
         HookFunc(){};
@@ -203,7 +203,7 @@ private:
     };
 
     template<class C>
-    class SimpleHookFunc : public Hookfunc
+    class SimpleHookFunc : public HookFunc
     {
     public:
         SimpleHookFunc(Module::RETURN_TYPE (C::*hook_func)(Session*) const):HookFunc(),hook_func_(hook_func){} ;
@@ -214,7 +214,7 @@ private:
     };
 
     template<class C>
-    class SimpleHookFuncW : public Hookfunc
+    class SimpleHookFuncW : public HookFunc
     {
     public:
         SimpleHookFuncW(Module::RETURN_TYPE (C::*hook_func)(Session*) ):HookFunc(),hook_func_(hook_func){} ;
