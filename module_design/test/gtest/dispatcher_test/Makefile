@@ -3,6 +3,7 @@ CC := g++
 DSP_DIR =  ../..
 
 SRCS := dispatcher_test.cpp \
+	  ../../core/session.cpp \
 	  ../../interface/flow.cpp \
 	  ../../driver/dispatcher.cpp \
 	  ../../driver/mod_config_helper.cpp 

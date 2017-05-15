@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <sys/time.h>
 
 #include "common/global_define.h"
 
@@ -19,8 +20,9 @@ public:
     const RequestType     request_type() const;
 
 protected:
-    std::string action_;
+    std::string    action_;
     struct timeval request_time_;
+    RequestType    request_type_;
 
     std::map<std::string, std::string> attr_;  // URL's attribute
 };
@@ -33,11 +35,11 @@ inline const struct timeval& Request::request_time() const
 
 inline const std::string& Request::GetAttribute(const std::string& attr_name, const std::string& default_val) const
 {
-    std::map<std::string, std::string>::const_iterator it = attrs_find(attr_name);
+    std::map<std::string, std::string>::const_iterator it = attr_.find(attr_name);
     return (it!=attr_.end())?it->second:default_val;
 }
 
-inline const RequestType& Request::request_type() const
+inline const RequestType Request::request_type() const
 {
     return request_type_;
 }

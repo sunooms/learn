@@ -16,6 +16,8 @@
 #include <string>
 #include "common/global_define.h"
 #include "core/mod_config.h"
+#include "interface/request.h"
+#include "interface/response.h"
 
 
 class Module
@@ -122,7 +124,7 @@ public:
 class Flow : public Module
 {
 public:
-    Flow(const char* module_name):Module(module_name);
+    Flow(const char* module_name):Module(module_name){};
     virtual ~Flow(){};
 
     virtual RESULT InitModule(const FlowConfig& cfg)=0;
@@ -132,7 +134,7 @@ public:
     virtual RESULT ProcessRequest(Session* session)=0;
     virtual RESULT ProcessEndRequest(Session* session)=0;
 
-    virtual Session* CreateSession(const IRequest* req, IResponse* resp)=0;
+    virtual Session* CreateSession(const Request* req, Response* resp)=0;
 };
 
 
