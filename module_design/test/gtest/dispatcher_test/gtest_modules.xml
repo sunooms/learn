@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flows name="dsp_pdb_pd_cpd">
+    <flow name="sohu" class="dsp.sohu.bid">
+        <components>
+            <component name="ad_select" class="dsp.ad_select">
+                <param name="order" hook="ad_select">1</param>
+            </component>
+        </components>
+    </flow>
+
+    <flow name="youku" class="dsp.youku.bid">
+        <components>
+            <component name="ad_select" class="dsp.ad_select">
+                <param name="order" hook="ad_select">1</param>
+            </component>
+        </components>
+    </flow>
+
+    <flow name="vtq" class="dsp.vtq.bid">
+        <components>
+            <component name="ad_select" class="dsp.ad_select">
+                <param name="order" hook="ad_select">1</param>
+            </component>
+        </components>
+    </flow>
+</flows>
