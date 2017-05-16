@@ -96,7 +96,7 @@ public:
 
     virtual Module* Build()
     {
-        /*typename*/ M* mod = new M(mod_name_.c_str());
+        M* mod = new M(mod_name_.c_str());
         modules_.push_back(mod);
 
         return dynamic_cast<Module*>(mod);

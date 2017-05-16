@@ -59,6 +59,10 @@ bool ModuleConfigHelper::LoadModuleConfig(ModuleConfig& mod_cfg)
         attr_node = flow_node->first_attribute("name");
         flow_conf.mod_name_ = (attr_node!=NULL)?attr_node->value():"";
 
+        // flow class name
+        attr_node = flow_node->first_attribute("class");
+        flow_conf.class_name_ = (attr_node!=NULL)?attr_node->value():"";
+
         DebugLog(" %s %s\n", flow_conf.mod_name_.c_str(), flow_confg.class_name.c_str());
 
         std::pair<FlowConfigMap::iterator, bool> rel
@@ -86,6 +90,10 @@ bool ModuleConfigHelper::_LoadFlowConfig(rapidxml::xml_node<>* flow_node, FlowCo
     // flow name
     rapidxml::xml_attribute<>* attr_node = flow_node->first_attribute("name");
     flow_cfg.mod_name_ = (attr_node!=NULL)?attr_node->value():"";
+
+    // flow class name
+    attr_node = flow_node->first_attribute("class");
+    flow_cfg.class_name_ = (attr_node!=NULL)?attr_node->value():"";
 
     // load component info
     rapidxml::xml_node<>* tmp_node = flow_node->first_node("components");
