@@ -7,10 +7,10 @@ DIR_OBJ = ./obj
 SRCS := dispatcher_test.cpp \
 	  ../../core/session.cpp \
 	  ../../interface/flow.cpp \
-	  ../../module/ad_select.cpp \
 	  ../../driver/dispatcher.cpp \
 	  ../../driver/module_manager.cpp \
-	  ../../driver/mod_config_helper.cpp 
+	  ../../driver/mod_config_helper.cpp  \
+	  ../../module/ad_select.cpp \
 
 
 #OBJS := $(patsubst %cpp,%o,$(SRCS))

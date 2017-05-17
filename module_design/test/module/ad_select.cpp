@@ -1,6 +1,5 @@
 #include "module/ad_select.h"
 #include "core/session.h"
-#include "interface/module.h"
 
 SimpleModuleFactory<AdSelect> selecting("dsp.ad_select");
 

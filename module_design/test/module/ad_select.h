@@ -2,6 +2,7 @@
 #define MODULE_AD_SELECT_H_
 
 #include "interface/flow.h"
+#include "interface/module.h"
 #include <map>
 #include <string>
 #include <stdio.h>
@@ -23,7 +24,7 @@ public:
 protected:
     ComponentConfig comp_conf_;
     int default_order_;
-}
+};
 
 #endif // MODULE_AD_SELECT_H_
 

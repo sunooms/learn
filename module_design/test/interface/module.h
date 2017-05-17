@@ -94,7 +94,7 @@ public:
         modules_.clear();
     };
 
-    virtual Module* Build()
+    virtual Module* build()
     {
         M* mod = new M(mod_name_.c_str());
         modules_.push_back(mod);
