@@ -46,6 +46,9 @@ public:
             return RESULT_ERROR ;
         }
 
+        //release the SimpleHookFunc pointer resource
+        hook_info.clear();
+
         return Attach(hook_name, hook, o);
     };
 
@@ -59,6 +62,10 @@ public:
 
         //soft copy ,release the SimpleHookFunc pointer resource
         hook_info.clear();
+
+        if(it != hooks_mgr_.end() && it->second != NULL){
+            hook = it->second;
+        }
 
         if(it==hooks_mgr_.end()){
             //TODO: need release the SimpleHookFunc pointer resource

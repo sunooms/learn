@@ -16,8 +16,8 @@ FlowBase::~FlowBase()
     {
         if ((comp=(*it))!=NULL)
         {
-            //comp->detach(this)
-            //delete comp
+            //comp->detach(this);
+            delete comp;
         }
     }
     components_.clear();
