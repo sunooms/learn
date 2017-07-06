@@ -1,5 +1,5 @@
-#include "module_workflow/youku_flow.h"
-#include "module_workflow/flow_steps.h"
+#include "module/flow/sohu_flow.h"
+#include "module/flow_steps.h"
 #include "interface/request.h"
 #include "interface/response.h"
 #include "core/dsp_session.h"
@@ -12,24 +12,24 @@
 //
 // If is dynamic lib, global instances are constructed during dlopen(),
 //     destructed at dlclose()
-SimpleModuleFactory<YoukuDSPFlow> __attribute__((init_priority(200))) youku_dsp_flow("dsp.youku");
+SimpleModuleFactory<SohuBidFlow> __attribute__((init_priority(200))) sohu_bid_flow("dsp.sohu");
 
-YoukuDSPFlow::YoukuDSPFlow(const char* module_name):FlowBase(module_name)
+SohuBidFlow::SohuBidFlow(const char* module_name):FlowBase(module_name)
 {
 }
 
-YoukuDSPFlow::~YoukuDSPFlow()
+SohuBidFlow::~SohuBidFlow()
 {
 }
 
-RESULT YoukuDSPFlow::InitModule(const FlowConfig& cfg)
+RESULT SohuBidFlow::InitModule(const FlowConfig& cfg)
 {
     RESULT rel = FlowBase::InitModule(cfg);
 
     return rel;
 }
 
-RESULT YoukuDSPFlow::InitHooks(const FlowConfig& cfg)
+RESULT SohuBidFlow::InitHooks(const FlowConfig& cfg)
 {
     CreateHook(GlobalInitStepName);
     CreateHook(AdSelectStepName);
@@ -39,35 +39,35 @@ RESULT YoukuDSPFlow::InitHooks(const FlowConfig& cfg)
     return RESULT_SUCCESS;
 }
 
-RESULT YoukuDSPFlow::GlobalInit(Session* session) const
+RESULT SohuBidFlow::GlobalInit(Session* session) const
 {
     RETURN_TYPE rel = ProcessHook(GlobalInitStepName, session);
 
     return RET_ISSUCCESSED(rel)?RESULT_SUCCESS : RESULT_ERROR;
 }
 
-RESULT YoukuDSPFlow::GlobalExit(Session* session) const
+RESULT SohuBidFlow::GlobalExit(Session* session) const
 {
     RETURN_TYPE rel = ProcessHook(GlobalExitStepName, session);
 
     return RET_ISSUCCESSED(rel)?RESULT_SUCCESS : RESULT_ERROR;
 }
 
-RESULT YoukuDSPFlow::ProcessEndRequest(Session* session) const
+RESULT SohuBidFlow::ProcessEndRequest(Session* session) const
 {
     RETURN_TYPE rel = ProcessHook(EndRequestStepName, session);
 
     return RET_ISSUCCESSED(rel)?RESULT_SUCCESS : RESULT_ERROR;
 }
 
-RESULT YoukuDSPFlow::ProcessRequest(Session* session) const
+RESULT SohuBidFlow::ProcessRequest(Session* session) const
 {
     RETURN_TYPE rel = ProcessHook(AdSelectStepName, session);
 
     return RET_ISSUCCESSED(rel)?RESULT_SUCCESS : RESULT_ERROR;
 }
 
-Session* YoukuDSPFlow::CreateSession(const Request* req, Response* resp)
+Session* SohuBidFlow::CreateSession(const Request* req, Response* resp)
 {
     return new DSPSession(const_cast<Request*>(req), resp);
 }

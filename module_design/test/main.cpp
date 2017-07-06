@@ -1,6 +1,6 @@
 #include <iostream>
 #include "interface/module.h"
-#include "module_flow_component/ad_select.h"
+#include "module/flow_component/ad_select.h"
 #include "driver/dispatcher.h"
 #include "driver/mod_config_helper.h"
 
